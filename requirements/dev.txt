@@ -1,0 +1,4 @@
+-r common.txt
+pytest==5.4.1
+flake8==3.7.9
+boto3==1.12.36
