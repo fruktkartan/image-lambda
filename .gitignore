@@ -1,0 +1,4 @@
+*pyc
+packages
+.env
+*.zip
