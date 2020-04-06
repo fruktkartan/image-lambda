@@ -11,7 +11,7 @@ The `.env.sample` file contains defaults for the environment variables used. You
 
 You will also need to setup credentials for AWS S3 access (see https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html for various ways to do this)
 
-Not that the `requirements/prod.txt` file does _not_ contain `boto3`, as this is preinstalled in our production environment, AWS Lambda.
+Not that the `requirements/prod.txt` file does _not_ contain `boto3` or `Pillow`, as these are preinstalled in our production environment.
 
 ## Running
 
