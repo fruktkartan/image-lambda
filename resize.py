@@ -59,6 +59,7 @@ def handler(event, context):
                 Filename=fp,
                 Bucket=out_bucket,
                 Key=fn,
+                ExtraArgs={'ACL': "public-read"},
             )
     return({})
 
