@@ -11,9 +11,8 @@ from argparse import ArgumentParser, FileType
 from PIL import Image
 from dotenv import load_dotenv
 load_dotenv()
-logging.basicConfig(format='%(asctime)s %(message)s',
-                    level=logging.DEBUG)
 logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 def resize(file, dir, key):
@@ -35,7 +34,7 @@ def resize(file, dir, key):
         img.save(fn, "JPEG")
         generated_images.append(fn)
 
-    return(fn)
+    return(generated_images)
 
 
 def handler(event, context):
@@ -47,15 +46,16 @@ def handler(event, context):
     s3_resource = boto3.resource('s3')
     in_bucket = os.environ.get("S3_bucket_in")
     out_bucket = os.environ.get("S3_bucket_out")
-    key = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
-    logger.info(f"Parsing {key}")
-    file = s3_resource.Object(bucket_name=in_bucket, key=key)
+    key = event["Records"][0]["s3"]["object"]["key"]
+    key_unquote = urllib.parse.unquote_plus(key)
+    logger.info(f"Parsing {key_unquote}")
+    file = s3_resource.Object(bucket_name=in_bucket, key=key_unquote)
     buffer = BytesIO(file.get()["Body"].read())
     with TemporaryDirectory() as tmpdir:
         files = resize(buffer, tmpdir, key)
         for file in files:
             s3_resource.meta.client.upload_file(
-                file,
+                Filename=file,
                 Bucket=out_bucket,
                 Key=file,
             )
