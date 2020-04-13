@@ -30,9 +30,10 @@ def resize(file, dir, key):
         height = int((float(img.size[1]) * float(ratio)))
         img = img.resize((width, height), Image.ANTIALIAS)
 
-        fn = os.path.join(dir, f"{key}_{width}.jpg")
-        img.save(fn, "JPEG")
-        generated_images.append(fn)
+        fn = f"{key}_{width}.jpg"
+        fp = os.path.join(dir, f"{key}_{width}.jpg")
+        img.save(fp, "JPEG")
+        generated_images.append((fn, fp))
 
     return(generated_images)
 
@@ -53,11 +54,11 @@ def handler(event, context):
     buffer = BytesIO(file.get()["Body"].read())
     with TemporaryDirectory() as tmpdir:
         files = resize(buffer, tmpdir, key)
-        for file in files:
+        for (fn, fp) in files:
             s3_resource.meta.client.upload_file(
-                Filename=file,
+                Filename=fp,
                 Bucket=out_bucket,
-                Key=file,
+                Key=fn,
             )
     return({})
 
