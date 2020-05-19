@@ -53,8 +53,10 @@ def handler(event, context):
     file = s3_resource.Object(bucket_name=in_bucket, key=key_unquote)
     buffer = BytesIO(file.get()["Body"].read())
     with TemporaryDirectory() as tmpdir:
+        logger.debug(f"Storing thumbs in {tmpdir}")
         files = resize(buffer, tmpdir, key)
         for (fn, fp) in files:
+            logger.debug(f"Uploading {fn}")
             s3_resource.meta.client.upload_file(
                 Filename=fp,
                 Bucket=out_bucket,
