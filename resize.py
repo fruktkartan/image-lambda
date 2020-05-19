@@ -8,8 +8,7 @@ import urllib
 from io import BytesIO
 from tempfile import TemporaryDirectory
 from argparse import ArgumentParser, FileType
-from PIL import Image
-from PIL import ImageOps
+from PIL import Image, ImageOps
 from dotenv import load_dotenv
 load_dotenv()
 logger = logging.getLogger()
