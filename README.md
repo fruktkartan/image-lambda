@@ -19,6 +19,14 @@ Not that the `requirements/prod.txt` file does _not_ contain `boto3` or `Pillow`
 ./resize.py --help
 ```
 
+## Testing
+
+Tests are written for pytest:
+
+```sh
+python3 -m pytest
+```
+
 ## Licences
 
 Test images, see description pages at Wikimedia Commons:

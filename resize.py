@@ -8,7 +8,7 @@ import urllib
 from io import BytesIO
 from tempfile import TemporaryDirectory
 from argparse import ArgumentParser, FileType
-from PIL import Image
+from PIL import Image, ImageOps
 from dotenv import load_dotenv
 load_dotenv()
 logger = logging.getLogger()
@@ -19,21 +19,21 @@ def resize(file, dir, key):
     """Validate and create thumbs for file."""
     WIDTHS = [400, 600, 800, 1200]
 
-    img = Image.open(file)
-    if img.mode != "RGB":
-        # Convert paletted images (e.g. png)
-        img = img.convert("RGB")
-
     generated_images = []
-    for width in WIDTHS:
-        ratio = (width / float(img.size[0]))
-        height = int((float(img.size[1]) * float(ratio)))
-        img = img.resize((width, height), Image.ANTIALIAS)
+    with Image.open(file) as img:
+        if img.mode != "RGB":
+            # Convert paletted images (e.g. png)
+            img = img.convert("RGB")
 
-        fn = f"{key}_{width}.jpg"
-        fp = os.path.join(dir, f"{key}_{width}.jpg")
-        img.save(fp, "JPEG")
-        generated_images.append((fn, fp))
+        img = ImageOps.exif_transpose(img)
+
+        for width in WIDTHS:
+            resized = img.copy()
+            resized.thumbnail((width, width))
+            fn = f"{key}_{width}.jpg"
+            fp = os.path.join(dir, f"{key}_{width}.jpg")
+            resized.save(fp, "JPEG")
+            generated_images.append((fn, fp))
 
     return(generated_images)
 
