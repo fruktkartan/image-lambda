@@ -20,23 +20,21 @@ def resize(file, dir, key):
     WIDTHS = [400, 600, 800, 1200]
 
     generated_images = []
-    try:
-        img = Image.open(file)
-        if img.mode != "RGB":
-            # Convert paletted images (e.g. png)
-            img = img.convert("RGB")
+    img = Image.open(file)
+    if img.mode != "RGB":
+        # Convert paletted images (e.g. png)
+        img = img.convert("RGB")
 
-        img = ImageOps.exif_transpose(img)
+    img = ImageOps.exif_transpose(img)
 
-        for width in WIDTHS:
-            resized = img.copy()
-            resized.thumbnail((width, width))
-            fn = f"{key}_{width}.jpg"
-            fp = os.path.join(dir, f"{key}_{width}.jpg")
-            resized.save(fp, "JPEG")
-            generated_images.append((fn, fp))
-    except:
-        pass
+    for width in WIDTHS:
+        resized = img.copy()
+        resized.thumbnail((width, width))
+        fn = f"{key}_{width}.jpg"
+        fp = os.path.join(dir, f"{key}_{width}.jpg")
+        resized.save(fp, "JPEG")
+        generated_images.append((fn, fp))
+
     return(generated_images)
 
 
