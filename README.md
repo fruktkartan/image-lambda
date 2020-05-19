@@ -21,9 +21,10 @@ Not that the `requirements/prod.txt` file does _not_ contain `boto3` or `Pillow`
 
 ## Testing
 
-Tests are written for pytest:
+Tests are written for pytest. Linting can be done with flake8.
 
 ```sh
+python3 -m flake8
 python3 -m pytest
 ```
 
