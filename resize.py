@@ -31,7 +31,7 @@ def resize(file, dir, key):
             resized = img.copy()
             resized.thumbnail((width, width))
             fn = f"{key}_{width}.jpg"
-            fp = os.path.join(dir, f"{key}_{width}.jpg")
+            fp = os.path.join(dir, fn)
             resized.save(fp, "JPEG")
             generated_images.append((fn, fp))
 
