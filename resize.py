@@ -25,6 +25,8 @@ def resize(file, dir, key):
             # Convert paletted images (e.g. png)
             img = img.convert("RGB")
 
+        clean(img)
+
         img = ImageOps.exif_transpose(img)
 
         for width in WIDTHS:
@@ -36,6 +38,19 @@ def resize(file, dir, key):
             generated_images.append((fn, fp))
 
     return(generated_images)
+
+
+def clean(img):
+    """
+    Remove all exif tags except the orientation
+    """
+    TAG_ORIENTATION = 0x112
+    exif = img.getexif()
+    if len(exif) > 0:
+        clean_exif = Image.Exif()
+        if TAG_ORIENTATION in exif:
+            clean_exif[TAG_ORIENTATION] = exif[TAG_ORIENTATION]
+        img.info["exif"] = clean_exif.tobytes()
 
 
 def handler(event, context):
