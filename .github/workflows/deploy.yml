@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: deploy to Lambda
+      run: |
+        pip3 install --target ./packages -r requirements/prod.txt --upgrade;
+        rm -f fk_images_dev.zip; \
+        cd packages; \
+        zip -r9 ../fk_images_dev.zip .; \
+        cd ..; \
+        zip -g fk_images_dev.zip resize.py; \
+        aws s3 cp ./ s3://fk-lambda-repo/ --recursive --exclude "*" --include "*.zip"; \
+        aws lambda update-function-code --function-name fruktkartan-image-dev --region eu-north-1 --s3-bucket fk-lambda-repo --s3-key fk_images_dev.zip
+
+      env:
+        CI: true
+        S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+        S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
