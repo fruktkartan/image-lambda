@@ -1,5 +1,5 @@
 run_tests:
-	python3 -m flake8;
+	python3 -m flake8 *.py;
 	python3 -m pytest test/*
 
 publish:
