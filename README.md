@@ -4,7 +4,7 @@ AWS lambda function for validating, cropping and re-scaling incoming images to f
 
 ```sh
 cp .env.sample .env
-pip install -r requirements/dev.txt
+python3 -m pip install -r requirements/dev.txt
 ```
 
 The `.env.sample` file contains defaults for the environment variables used. You need to set these variables somehow, e.g. by copying them to a `.env` file.
