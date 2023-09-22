@@ -37,7 +37,7 @@ def resize(file, dir, key):
             resized.save(fp, "JPEG")
             generated_images.append((fn, fp))
 
-    return(generated_images)
+    return generated_images
 
 
 def clean(img):
@@ -76,9 +76,13 @@ def handler(event, context):
                 Filename=fp,
                 Bucket=out_bucket,
                 Key=fn,
-                ExtraArgs={'ACL': "public-read"},
+                ExtraArgs={
+                    'ACL': "public-read",
+                    'ContentType': "image/jpeg",
+                    'CacheControl': "public, max-age=31536000",
+                },
             )
-    return({})
+    return {}
 
 
 def cli(args):
